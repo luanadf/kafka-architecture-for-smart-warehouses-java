@@ -24,12 +24,17 @@ public class GeradorPedidos {
 
 		try (KafkaProducer<String, Pedido> producer = new KafkaProducer<String, Pedido>(properties)) {
 			while (true) {
+
+				// TODO Adaptar para modelo do George
 				Pedido pedido = gerarPedido();
 
-				ProducerRecord<String, Pedido> record = new ProducerRecord<String, Pedido>("topic", pedido);
+				ProducerRecord<String, Pedido> record = new ProducerRecord<String, Pedido>("topico-pedidos", pedido);
+				System.out.println(record.value());
 				producer.send(record);
 
-				Thread.sleep(200);
+				// TODO Adaptar para modelo do George
+				// Tempo de chegada dos pedidos 1 a cada 5 segundos
+				Thread.sleep(5000);
 			}
 		}
 	}

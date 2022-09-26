@@ -3,6 +3,7 @@ package service;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Properties;
+import java.util.Random;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -15,7 +16,9 @@ import model.Pedido;
 
 public class ProcessadorPedidos {
 
-	public static void main(String[] args) {
+	private static Random rand = new Random();
+
+	public static void main(String[] args) throws InterruptedException {
 
 		Properties properties = new Properties();
 		properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
@@ -25,18 +28,32 @@ public class ProcessadorPedidos {
 		properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
 		try (KafkaConsumer<String, Pedido> consumer = new KafkaConsumer<String, Pedido>(properties)) {
-			consumer.subscribe(Arrays.asList("topic"));
+			consumer.subscribe(Arrays.asList("topico-pedidos"));
 
 			while (true) {
-				ConsumerRecords<String, Pedido> pedidos = consumer.poll(Duration.ofMillis(200));
+				// Faz o pool das mensagens a cada 1 segundo: Duration.ofMillis(1000)
+				ConsumerRecords<String, Pedido> pedidos = consumer.poll(Duration.ofMillis(1000));
 
+				// Para cada mensagem que ele recebeu durante o pool
 				for (ConsumerRecord<String, Pedido> record : pedidos) {
 					Pedido pedido = record.value();
 
-					System.out.println(pedido);
+					// Chama uma simulacao para cada pedido
+					String mensagem = basic_linear_simulation(pedido);
+
+					// Printa a mensagem de retorno da simulação
+					// TODO enviar essa mensagem para o topico de monitoramento
+					System.out.println(mensagem);
 				}
 			}
 		}
+	}
+
+	// Primeira função de simulacao (executa linearmente com um sleep de 1-5 segundos)
+	private static String basic_linear_simulation(Pedido pedido) throws InterruptedException {
+		int time = rand.nextInt(5000);
+		Thread.sleep(time);
+		return "Pedido " + pedido.getId() + " entregue em " + time + "ms";
 	}
 
 }

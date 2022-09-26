@@ -2,7 +2,7 @@ package model;
 
 public class Pedido {
 
-	// TODO adapatar as entradas do George
+	// TODO Adaptar para modelo do George
 	private Long id;
 	private Integer n_itens;
 	private Integer warehouse_block;
