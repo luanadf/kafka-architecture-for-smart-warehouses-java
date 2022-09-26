@@ -12,6 +12,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
 import deserializer.PedidoDeserializer;
+import model.MensagemFinalizacao;
 import model.Pedido;
 
 public class ProcessadorPedidos {
@@ -39,21 +40,30 @@ public class ProcessadorPedidos {
 					Pedido pedido = record.value();
 
 					// Chama uma simulacao para cada pedido
-					String mensagem = basic_linear_simulation(pedido);
+					MensagemFinalizacao mensagem = basic_linear_simulation(pedido);
 
 					// Printa a mensagem de retorno da simulação
-					// TODO enviar essa mensagem para o topico de monitoramento
 					System.out.println(mensagem);
+
+					// TODO enviar essa mensagem para o topico de monitoramento
+					// Envio da mensagem para o topico de monitoramento
+					TransmissorMensagens transmissor = new TransmissorMensagens();
+					transmissor.transmitirMensagem(mensagem);
+
 				}
 			}
 		}
 	}
 
 	// Primeira função de simulacao (executa linearmente com um sleep de 1-5 segundos)
-	private static String basic_linear_simulation(Pedido pedido) throws InterruptedException {
+	private static MensagemFinalizacao basic_linear_simulation(Pedido pedido) throws InterruptedException {
 		int time = rand.nextInt(5000);
 		Thread.sleep(time);
-		return "Pedido " + pedido.getId() + " entregue em " + time + "ms";
+
+		MensagemFinalizacao mensagem = new MensagemFinalizacao(pedido.getId(), time);
+
+		// return "Pedido " + pedido.getId() + " entregue em " + time + "ms";
+		return mensagem;
 	}
 
 }
