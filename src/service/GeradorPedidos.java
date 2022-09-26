@@ -17,7 +17,6 @@ public class GeradorPedidos {
 	private static long operacao = 0;
 
 	public static void main(String[] args) throws InterruptedException {
-
 		Properties properties = new Properties();
 		properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
 		properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
@@ -33,7 +32,6 @@ public class GeradorPedidos {
 				Thread.sleep(200);
 			}
 		}
-
 	}
 
 	private static Pedido gerarPedido() {

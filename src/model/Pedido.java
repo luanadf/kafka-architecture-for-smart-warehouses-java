@@ -2,10 +2,12 @@ package model;
 
 public class Pedido {
 
-	// TODO Criar classe Produto e um lista de produtos
+	// TODO adapatar as entradas do George
 	private Long id;
 	private Integer n_itens;
 	private Integer warehouse_block;
+
+	public Pedido() {}
 
 	public Pedido(Long id, Integer n_items, Integer warehouse_block) {
 		super();
