@@ -21,8 +21,7 @@ public class LeitorPedidosJson {
 	public static void getPedidosDoJson(String filepath) {
 		// TODO passar como argumento depois
 
-		// TODO ARRUMAR PATH AQUI
-		String static_filepath = "/kafka-architecture-for-smart-warehouses-java/pedidos/orders_of_SIMU-i180-o6-r250-dHT03-d52-1.1.json";
+		String static_filepath = "../resources/orders_of_SIMU-i180-o6-r250-dHT03-d52-1.1.json";
 
 		InputStream is = LeitorPedidosJson.class.getResourceAsStream(static_filepath);
 		if (is == null) {
