@@ -34,6 +34,14 @@ public class GeradorPedidos {
 
 				// TODO Adaptar para modelo do George
 				// Tempo de chegada dos pedidos 1 a cada 5 segundos
+
+				/*
+				 * Orders were generated each 1 minute, and the number of orders followed a gamma distribution with parameters α
+				 * = 6.34 and β = 1.0 (more or less six orders every minute).
+				 */
+
+				// double sample = new GammaDistribution(shape, scale).sample();
+
 				Thread.sleep(5000);
 			}
 		}
