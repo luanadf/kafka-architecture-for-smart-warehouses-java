@@ -12,15 +12,23 @@ import model.Produto;
 
 public class LeitorPedidosJson {
 
-	public static void main(String[] args) {
-		getPedidosDoJson("./pedidos/orders_of_SIMU-i180-o6-r250-dHT03-d52-1.1.json");
+	private String filepath;
+	private ArrayList<Pedido> pedidos;
+
+	private int idPedidoAtual;
+
+	public LeitorPedidosJson(String filepath) {
+		super();
+		this.filepath = filepath;
+		this.pedidos = lerPedidosJson();
+		this.idPedidoAtual = 0;
 	}
 
-	// public LeitorPedidosJson() {}
+	@SuppressWarnings("null")
+	public ArrayList<Pedido> lerPedidosJson() {
 
-	public static void getPedidosDoJson(String filepath) {
 		// TODO passar como argumento depois
-
+		// String arquivo = getFilepath();
 		String static_filepath = "../resources/orders_of_SIMU-i180-o6-r250-dHT03-d52-1.1.json";
 
 		InputStream is = LeitorPedidosJson.class.getResourceAsStream(static_filepath);
@@ -32,6 +40,7 @@ public class LeitorPedidosJson {
 
 		JSONArray array_pedidos_json = new JSONArray(tokener);
 
+		ArrayList<Pedido> pedidos = null;
 		Long id_pedido = (long) 0;
 
 		for (Object objeto_pedido : array_pedidos_json) {
@@ -42,9 +51,11 @@ public class LeitorPedidosJson {
 
 			System.out.println(pedido.toString());
 
+			pedidos.add(pedido);
 			id_pedido++;
-
 		}
+
+		return pedidos;
 	}
 
 	public static Pedido jsonParaPedido(JSONObject json_pedido, Long id_pedido) {
@@ -78,6 +89,45 @@ public class LeitorPedidosJson {
 		float peso = dados_produto.getInt("peso_total");
 
 		return new Produto(id_produto, coordenada_x, coordenada_y, altura_prateleira, peso);
+	}
+
+	public Pedido getProximoPedido() {
+		int id = getIdPedidoAtual();
+
+		ArrayList<Pedido> pedidos = getPedidos();
+		Pedido pedido = pedidos.get(id);
+
+		if (id + 1 == pedidos.size()) {
+			setIdPedidoAtual(0);
+		} else {
+			setIdPedidoAtual(id++);
+		}
+
+		return pedido;
+	}
+
+	public String getFilepath() {
+		return filepath;
+	}
+
+	public void setFilepath(String filepath) {
+		this.filepath = filepath;
+	}
+
+	public ArrayList<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(ArrayList<Pedido> pedidos) {
+		this.pedidos = pedidos;
+	}
+
+	public int getIdPedidoAtual() {
+		return idPedidoAtual;
+	}
+
+	public void setIdPedidoAtual(int idPedidoAtual) {
+		this.idPedidoAtual = idPedidoAtual;
 	}
 
 }

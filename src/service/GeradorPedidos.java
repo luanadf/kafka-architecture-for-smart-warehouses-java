@@ -15,6 +15,8 @@ import serializer.PedidoSerializer;
 
 public class GeradorPedidos {
 
+	static LeitorPedidosJson leitorPedidos = new LeitorPedidosJson("../resources/orders_of_SIMU-i180-o6-r250-dHT03-d52-1.1.json");
+
 	public static void main(String[] args) throws InterruptedException {
 		Properties properties = new Properties();
 		properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
@@ -28,6 +30,7 @@ public class GeradorPedidos {
 		double shape = 6.34;
 		double scale = 1.0;
 
+		// Inicio envio de pedidos
 		try (KafkaProducer<String, Pedido> producer = new KafkaProducer<String, Pedido>(properties)) {
 			while (true) {
 
@@ -42,7 +45,7 @@ public class GeradorPedidos {
 				for (int i = 0; i <= n_pedidos; i++) {
 
 					// get pedido do arquivo
-					Pedido pedido = gerarPedido();
+					Pedido pedido = leitorPedidos.getProximoPedido();
 
 					ProducerRecord<String, Pedido> record = new ProducerRecord<String, Pedido>("topico-pedidos", pedido);
 					System.out.println(record.value());
@@ -55,6 +58,7 @@ public class GeradorPedidos {
 		}
 	}
 
+	// TODO passar para utils
 	public static double round(double value, int places) {
 		if (places < 0)
 			throw new IllegalArgumentException();
