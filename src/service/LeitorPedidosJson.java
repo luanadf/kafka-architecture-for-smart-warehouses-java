@@ -24,7 +24,6 @@ public class LeitorPedidosJson {
 		this.idPedidoAtual = 0;
 	}
 
-	@SuppressWarnings("null")
 	public ArrayList<Pedido> lerPedidosJson() {
 
 		// TODO passar como argumento depois
@@ -40,7 +39,7 @@ public class LeitorPedidosJson {
 
 		JSONArray array_pedidos_json = new JSONArray(tokener);
 
-		ArrayList<Pedido> pedidos = null;
+		ArrayList<Pedido> lista_pedidos = new ArrayList<Pedido>();
 		Long id_pedido = (long) 0;
 
 		for (Object objeto_pedido : array_pedidos_json) {
@@ -49,13 +48,12 @@ public class LeitorPedidosJson {
 
 			Pedido pedido = jsonParaPedido(json_pedido, id_pedido);
 
-			System.out.println(pedido.toString());
-
-			pedidos.add(pedido);
+			// System.out.println(pedido);
+			lista_pedidos.add(pedido);
 			id_pedido++;
 		}
 
-		return pedidos;
+		return lista_pedidos;
 	}
 
 	public static Pedido jsonParaPedido(JSONObject json_pedido, Long id_pedido) {
@@ -100,7 +98,8 @@ public class LeitorPedidosJson {
 		if (id + 1 == pedidos.size()) {
 			setIdPedidoAtual(0);
 		} else {
-			setIdPedidoAtual(id++);
+			id++;
+			setIdPedidoAtual(id);
 		}
 
 		return pedido;

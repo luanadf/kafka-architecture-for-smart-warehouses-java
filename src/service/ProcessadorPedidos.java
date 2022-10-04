@@ -57,6 +57,9 @@ public class ProcessadorPedidos {
 
 	// Primeira função de simulacao (executa linearmente com um sleep de 1-5 segundos)
 	private static MensagemFinalizacao basic_linear_simulation(Pedido pedido) throws InterruptedException {
+
+		// TODO pegar o tempo do pedido do arquivo baseado no id do pedido e colocar no sleep
+
 		int time = rand.nextInt(5000);
 		Thread.sleep(time);
 

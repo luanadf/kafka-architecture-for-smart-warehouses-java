@@ -25,7 +25,6 @@ public class TransmissorMensagens {
 		// Envia a mensagem para o topico de monitoramento
 		try (KafkaProducer<String, MensagemFinalizacao> producer = new KafkaProducer<String, MensagemFinalizacao>(this.properties)) {
 			ProducerRecord<String, MensagemFinalizacao> record = new ProducerRecord<String, MensagemFinalizacao>("topico-monitoramento", mensagem);
-			System.out.println(record.value());
 			producer.send(record);
 		}
 
