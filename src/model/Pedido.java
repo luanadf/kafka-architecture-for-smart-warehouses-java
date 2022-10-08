@@ -4,23 +4,23 @@ import java.util.ArrayList;
 
 public class Pedido {
 
-	private Long id;
+	private Integer id;
 
 	private ArrayList<Produto> produtos;
 
 	public Pedido() {}
 
-	public Pedido(Long id, ArrayList<Produto> produtos) {
+	public Pedido(Integer id, ArrayList<Produto> produtos) {
 		super();
 		this.id = id;
 		this.produtos = produtos;
 	}
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

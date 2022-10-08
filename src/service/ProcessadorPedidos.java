@@ -1,9 +1,9 @@
 package service;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Properties;
-import java.util.Random;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -12,12 +12,11 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
 import deserializer.PedidoDeserializer;
-import model.MensagemFinalizacao;
 import model.Pedido;
 
 public class ProcessadorPedidos {
 
-	private static Random rand = new Random();
+	static LeitorPedidosJson leitorPedidos = new LeitorPedidosJson("../resources/orders_of_SIMU-i180-o6-r250-dHT03-d52-1.1.json");
 
 	public static void main(String[] args) throws InterruptedException {
 
@@ -27,6 +26,8 @@ public class ProcessadorPedidos {
 		properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
 		properties.put(ConsumerConfig.GROUP_ID_CONFIG, "grupo-consumidor");
 		properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+
+		TransmissorMensagens transmissor = new TransmissorMensagens();
 
 		try (KafkaConsumer<String, Pedido> consumer = new KafkaConsumer<String, Pedido>(properties)) {
 			consumer.subscribe(Arrays.asList("topico-pedidos"));
@@ -38,35 +39,13 @@ public class ProcessadorPedidos {
 				// Para cada mensagem que ele recebeu durante o pool
 				for (ConsumerRecord<String, Pedido> record : pedidos) {
 					Pedido pedido = record.value();
+					BigDecimal tempo_pedido = leitorPedidos.getTempoByPedidoId(pedido.getId());
 
-					// Chama uma simulacao para cada pedido
-					MensagemFinalizacao mensagem = basic_linear_simulation(pedido);
-
-					// Printa a mensagem de retorno da simulação
-					System.out.println(mensagem);
-
-					// TODO enviar essa mensagem para o topico de monitoramento
-					// Envio da mensagem para o topico de monitoramento
-					TransmissorMensagens transmissor = new TransmissorMensagens();
-					transmissor.transmitirMensagem(mensagem);
+					new ThreadColetaEntregaPedido(pedido, tempo_pedido, transmissor);
 
 				}
 			}
 		}
-	}
-
-	// Primeira função de simulacao (executa linearmente com um sleep de 1-5 segundos)
-	private static MensagemFinalizacao basic_linear_simulation(Pedido pedido) throws InterruptedException {
-
-		// TODO pegar o tempo do pedido do arquivo baseado no id do pedido e colocar no sleep
-
-		int time = rand.nextInt(5000);
-		Thread.sleep(time);
-
-		MensagemFinalizacao mensagem = new MensagemFinalizacao(pedido.getId(), time);
-
-		// return "Pedido " + pedido.getId() + " entregue em " + time + "ms";
-		return mensagem;
 	}
 
 }

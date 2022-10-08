@@ -1,7 +1,5 @@
 package service;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Properties;
 
 import org.apache.commons.math3.distribution.GammaDistribution;
@@ -12,6 +10,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 
 import model.Pedido;
 import serializer.PedidoSerializer;
+import utils.FuncoesUteis;
 
 public class GeradorPedidos {
 
@@ -36,15 +35,15 @@ public class GeradorPedidos {
 
 				double sample = new GammaDistribution(shape, scale).sample();
 
-				double n_pedidos = round(sample, 0);
-				long tempo_sleep = (long) round((60.0 / n_pedidos), 0);
+				double n_pedidos = FuncoesUteis.round(sample, 0);
+				long tempo_sleep = (long) FuncoesUteis.round((60.0 / n_pedidos), 0);
 
 				System.out.println(n_pedidos + " pedidos = 1 pedido a cada: " + tempo_sleep + " segundos");
 
 				// Cada volta do for representa mais ou menos 60 segundos;
 				for (int i = 0; i <= n_pedidos; i++) {
 
-					// get pedido do arquivo
+					// get proximo pedido do arquivo
 					Pedido pedido = leitorPedidos.getProximoPedido();
 
 					ProducerRecord<String, Pedido> record = new ProducerRecord<String, Pedido>("topico-pedidos", pedido);
@@ -56,16 +55,6 @@ public class GeradorPedidos {
 				}
 			}
 		}
-	}
-
-	// TODO passar para utils
-	public static double round(double value, int places) {
-		if (places < 0)
-			throw new IllegalArgumentException();
-
-		BigDecimal bd = BigDecimal.valueOf(value);
-		bd = bd.setScale(places, RoundingMode.HALF_UP);
-		return bd.doubleValue();
 	}
 
 }

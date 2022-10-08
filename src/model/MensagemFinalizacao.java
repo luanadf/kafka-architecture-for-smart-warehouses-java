@@ -1,32 +1,34 @@
 package model;
 
+import java.math.BigDecimal;
+
 public class MensagemFinalizacao {
 
 	// TODO Adaptar para modelo de mensagem de retorno do George
-	private Long id_pedido;
-	private Integer tempo_total_entrega;
+	private Integer id_pedido;
+	private BigDecimal tempo_total_entrega;
 
 	public MensagemFinalizacao() {}
 
-	public MensagemFinalizacao(Long id_pedido, Integer tempo_total_entrega) {
+	public MensagemFinalizacao(Integer id_pedido, BigDecimal tempo_total_entrega) {
 		super();
 		this.id_pedido = id_pedido;
 		this.tempo_total_entrega = tempo_total_entrega;
 	}
 
-	public Long getId() {
+	public Integer getId() {
 		return id_pedido;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id_pedido = id;
 	}
 
-	public Integer getTempo_total_entrega() {
+	public BigDecimal getTempo_total_entrega() {
 		return tempo_total_entrega;
 	}
 
-	public void setTempo_total_entrega(Integer tempo_total_entrega) {
+	public void setTempo_total_entrega(BigDecimal tempo_total_entrega) {
 		this.tempo_total_entrega = tempo_total_entrega;
 	}
 
