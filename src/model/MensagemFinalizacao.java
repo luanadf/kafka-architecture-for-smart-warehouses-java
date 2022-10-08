@@ -20,8 +20,8 @@ public class MensagemFinalizacao {
 		return id_pedido;
 	}
 
-	public void setId(Integer id) {
-		this.id_pedido = id;
+	public void setId(Integer id_pedido) {
+		this.id_pedido = id_pedido;
 	}
 
 	public BigDecimal getTempo_total_entrega() {

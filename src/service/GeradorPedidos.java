@@ -8,6 +8,7 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
 
+import components.LeitorPedidosJson;
 import model.Pedido;
 import serializer.PedidoSerializer;
 import utils.FuncoesUteis;
@@ -29,6 +30,8 @@ public class GeradorPedidos {
 		double shape = 6.34;
 		double scale = 1.0;
 
+		Thread.sleep(10000);
+
 		// Inicio envio de pedidos
 		try (KafkaProducer<String, Pedido> producer = new KafkaProducer<String, Pedido>(properties)) {
 			while (true) {
@@ -38,7 +41,7 @@ public class GeradorPedidos {
 				double n_pedidos = FuncoesUteis.round(sample, 0);
 				long tempo_sleep = (long) FuncoesUteis.round((60.0 / n_pedidos), 0);
 
-				System.out.println(n_pedidos + " pedidos = 1 pedido a cada: " + tempo_sleep + " segundos");
+				System.out.println("--> " + n_pedidos + " pedidos = 1 pedido a cada " + tempo_sleep + " segundos.");
 
 				// Cada volta do for representa mais ou menos 60 segundos;
 				for (int i = 0; i <= n_pedidos; i++) {
@@ -47,8 +50,8 @@ public class GeradorPedidos {
 					Pedido pedido = leitorPedidos.getProximoPedido();
 
 					ProducerRecord<String, Pedido> record = new ProducerRecord<String, Pedido>("topico-pedidos", pedido);
-					System.out.println(record.value());
 					producer.send(record);
+					System.out.println(record.value());
 
 					Thread.sleep(tempo_sleep * 1000);
 

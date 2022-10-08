@@ -4,24 +4,24 @@ import java.util.ArrayList;
 
 public class Pedido {
 
-	private Integer id;
+	private Integer id_pedido;
 
 	private ArrayList<Produto> produtos;
 
 	public Pedido() {}
 
-	public Pedido(Integer id, ArrayList<Produto> produtos) {
+	public Pedido(Integer id_pedido, ArrayList<Produto> produtos) {
 		super();
-		this.id = id;
+		this.id_pedido = id_pedido;
 		this.produtos = produtos;
 	}
 
-	public Integer getId() {
-		return id;
+	public Integer getIdPedido() {
+		return id_pedido;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setIdPedido(Integer id_pedido) {
+		this.id_pedido = id_pedido;
 	}
 
 	public ArrayList<Produto> getProdutos() {
@@ -34,7 +34,7 @@ public class Pedido {
 
 	@Override
 	public String toString() {
-		return "Pedido [id=" + id + ", produtos=" + produtos + "]";
+		return "Pedido [id_pedido=" + id_pedido + ", produtos=" + produtos + "]";
 	}
 
 }

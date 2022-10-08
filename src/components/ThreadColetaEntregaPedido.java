@@ -1,9 +1,10 @@
-package service;
+package components;
 
 import java.math.BigDecimal;
 
 import model.MensagemFinalizacao;
 import model.Pedido;
+import service.TransmissorMensagens;
 import utils.FuncoesUteis;
 
 public class ThreadColetaEntregaPedido extends Thread {
@@ -17,6 +18,7 @@ public class ThreadColetaEntregaPedido extends Thread {
 		this.pedido = pedido;
 		this.tempoPedido = tempoPedido;
 		this.transmissor = transmissor;
+		start();
 	}
 
 	@Override
@@ -27,10 +29,11 @@ public class ThreadColetaEntregaPedido extends Thread {
 		try {
 			// Thread sleep pelo tempo que o pedido leva para ser finalizado
 			long tempoPedidoEmMilisegundos = FuncoesUteis.bigDecimalSegundosToLongMilisegundos(tempo);
-			Thread.sleep(tempoPedidoEmMilisegundos);
+			// Thread.sleep(tempoPedidoEmMilisegundos);
+			Thread.sleep(tempoPedidoEmMilisegundos / 10); // execução mais rapida para testes
 
 			// Cria a e envia a mensagem de finalização do pedido para o transmissor
-			MensagemFinalizacao mensagem = new MensagemFinalizacao(pedido.getId(), tempo);
+			MensagemFinalizacao mensagem = new MensagemFinalizacao(pedido.getIdPedido(), tempo);
 			transmissor.transmitirMensagem(mensagem);
 
 		} catch (InterruptedException e) {

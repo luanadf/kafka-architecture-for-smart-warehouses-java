@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONTokener;
 
-import service.LeitorPedidosJson;
+import components.LeitorPedidosJson;
 
 public class Testes {
 
@@ -58,6 +58,8 @@ public class Testes {
 
 			long tempo_pedido_millisegundos = bigDecimalSegundosToLongMillisegundos(tempo_pedido_segundos);
 			System.out.println(" - Millisegundos: " + tempo_pedido_millisegundos);
+
+			System.out.println(" - Millisegundos 10x mai rapido: " + tempo_pedido_millisegundos / 10);
 
 			lista_tempos.add(tempo_pedido_segundos);
 		}

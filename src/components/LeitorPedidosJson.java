@@ -1,4 +1,4 @@
-package service;
+package components;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -62,7 +62,7 @@ public class LeitorPedidosJson {
 	public static Pedido jsonParaPedido(JSONObject json_pedido, Integer id_pedido) {
 
 		Pedido pedido = new Pedido();
-		pedido.setId(id_pedido);
+		pedido.setIdPedido(id_pedido);
 
 		ArrayList<Produto> produtos = new ArrayList<Produto>();
 
