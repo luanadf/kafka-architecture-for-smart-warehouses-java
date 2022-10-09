@@ -23,20 +23,20 @@ public class MonitorMensagens {
 			consumer.subscribe(Arrays.asList("topico-monitoramento"));
 
 			while (true) {
-				// Faz o pool das mensagens a cada 1 segundo: Duration.ofMillis(1000)
-				ConsumerRecords<String, MensagemFinalizacao> mensagens = consumer.poll(Duration.ofMillis(1000));
+				// Faz o pool das mensagens a cada 0,1 segundo: Duration.ofMillis(100)
+				ConsumerRecords<String, MensagemFinalizacao> mensagens = consumer.poll(Duration.ofMillis(100));
 
 				// Para cada mensagem que ele recebeu durante o pool
 				for (ConsumerRecord<String, MensagemFinalizacao> record : mensagens) {
 					MensagemFinalizacao mensagemFinalizacao = record.value();
 
-					System.out.println("Pedido finalizado: " + mensagemFinalizacao);
-
+					System.out.println("Pedido " + mensagemFinalizacao.getIdPedido() + " finalizado: " + mensagemFinalizacao);
 				}
 			}
 		}
 	}
 
+	// Cria as propriedades do kafka-consumer
 	public static Properties getPropriedadesConsumidorMensagens() {
 		Properties properties = new Properties();
 

@@ -15,7 +15,7 @@ import utils.FuncoesUteis;
 
 public class GeradorPedidos {
 
-	static LeitorPedidosJson leitorPedidos = new LeitorPedidosJson("../resources/orders_of_SIMU-i180-o6-r250-dHT03-d52-1.1.json");
+	static LeitorPedidosJson leitorPedidos = new LeitorPedidosJson("SIMU-i180-o6-r250-dHT03-d52-1.1.json");
 
 	public static void main(String[] args) throws InterruptedException {
 		Properties properties = new Properties();
@@ -30,7 +30,7 @@ public class GeradorPedidos {
 		double shape = 6.34;
 		double scale = 1.0;
 
-		Thread.sleep(10000);
+		Thread.sleep(20000);
 
 		// Inicio envio de pedidos
 		try (KafkaProducer<String, Pedido> producer = new KafkaProducer<String, Pedido>(properties)) {
@@ -41,20 +41,21 @@ public class GeradorPedidos {
 				double n_pedidos = FuncoesUteis.round(sample, 0);
 				long tempo_sleep = (long) FuncoesUteis.round((60.0 / n_pedidos), 0);
 
-				System.out.println("--> " + n_pedidos + " pedidos = 1 pedido a cada " + tempo_sleep + " segundos.");
-
 				// Cada volta do for representa mais ou menos 60 segundos;
 				for (int i = 0; i <= n_pedidos; i++) {
 
-					// get proximo pedido do arquivo
+					// Pega o proximo pedido do arquivo
 					Pedido pedido = leitorPedidos.getProximoPedido();
 
 					ProducerRecord<String, Pedido> record = new ProducerRecord<String, Pedido>("topico-pedidos", pedido);
 					producer.send(record);
 					System.out.println(record.value());
 
-					Thread.sleep(tempo_sleep * 1000);
+					// Execução normal: 6 pedidos por minuto = 1 peido a cada 10 segundos
+					// Thread.sleep(tempo_sleep * 1000);
 
+					// Execução 10x mais rápida para testes: 6 peidos a cada 6 segundos = 1 pedido por segundo
+					Thread.sleep(tempo_sleep * 100);
 				}
 			}
 		}

@@ -18,7 +18,7 @@ import model.Pedido;
 
 public class ProcessadorPedidos {
 
-	static LeitorPedidosJson leitorPedidos = new LeitorPedidosJson("../resources/orders_of_SIMU-i180-o6-r250-dHT03-d52-1.1.json");
+	static LeitorPedidosJson leitorPedidos = new LeitorPedidosJson("SIMU-i180-o6-r250-dHT03-d52-1.1.json");
 
 	public static void main(String[] args) throws InterruptedException {
 
@@ -46,6 +46,7 @@ public class ProcessadorPedidos {
 		}
 	}
 
+	// Cria as propriedades do kafka-consumer
 	public static Properties getPropriedadesConsumidorPedidos() {
 		Properties properties = new Properties();
 

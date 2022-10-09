@@ -15,7 +15,7 @@ public class LeitorPedidosJson {
 
 	private String filename;
 	private ArrayList<Pedido> pedidos;
-	private ArrayList<BigDecimal> tempo_pedidos;
+	private ArrayList<BigDecimal> tempoPedidos;
 
 	private int idPedidoAtual;
 
@@ -23,19 +23,17 @@ public class LeitorPedidosJson {
 		super();
 		this.filename = filename;
 		this.pedidos = lerPedidosJson();
-		this.tempo_pedidos = lerTempoPedidos();
+		this.tempoPedidos = lerTempoPedidos();
 		this.idPedidoAtual = 0;
 	}
 
 	public ArrayList<Pedido> lerPedidosJson() {
+		String filename = getFilename();
+		String orders_filepath = "../resources/orders_of_" + filename;
 
-		// TODO passar como argumento depois
-		// String arquivo = getFilepath();
-		String static_filepath = "../resources/orders_of_SIMU-i180-o6-r250-dHT03-d52-1.1.json";
-
-		InputStream is = LeitorPedidosJson.class.getResourceAsStream(static_filepath);
+		InputStream is = LeitorPedidosJson.class.getResourceAsStream(orders_filepath);
 		if (is == null) {
-			throw new NullPointerException("Cannot find resource file " + static_filepath);
+			throw new NullPointerException("Cannot find resource file " + orders_filepath);
 		}
 
 		JSONTokener tokener = new JSONTokener(is);
@@ -51,7 +49,6 @@ public class LeitorPedidosJson {
 
 			Pedido pedido = jsonParaPedido(json_pedido, id_pedido);
 
-			// System.out.println(pedido);
 			lista_pedidos.add(pedido);
 			id_pedido++;
 		}
@@ -109,12 +106,12 @@ public class LeitorPedidosJson {
 	}
 
 	public ArrayList<BigDecimal> lerTempoPedidos() {
+		String filename = getFilename();
+		String time_of_orders_filepath = "../resources/time_of_orders_of_" + filename;
 
-		String static_filepath = "../resources/time_of_orders_of_SIMU-i180-o6-r250-dHT03-d52-1.1.json";
-
-		InputStream is = LeitorPedidosJson.class.getResourceAsStream(static_filepath);
+		InputStream is = LeitorPedidosJson.class.getResourceAsStream(time_of_orders_filepath);
 		if (is == null) {
-			throw new NullPointerException("Cannot find resource file " + static_filepath);
+			throw new NullPointerException("Cannot find resource file " + time_of_orders_filepath);
 		}
 
 		JSONTokener tokener = new JSONTokener(is);
@@ -134,15 +131,15 @@ public class LeitorPedidosJson {
 	}
 
 	public BigDecimal getTempoByPedidoId(int id_pedido) {
-		ArrayList<BigDecimal> tempo_pedidos = this.getTempo_pedidos();
+		ArrayList<BigDecimal> tempo_pedidos = this.getTempoPedidos();
 		return tempo_pedidos.get(id_pedido);
 	}
 
-	public String getFilepath() {
+	public String getFilename() {
 		return filename;
 	}
 
-	public void setFilepath(String filename) {
+	public void setFilename(String filename) {
 		this.filename = filename;
 	}
 
@@ -162,12 +159,12 @@ public class LeitorPedidosJson {
 		this.idPedidoAtual = idPedidoAtual;
 	}
 
-	public ArrayList<BigDecimal> getTempo_pedidos() {
-		return tempo_pedidos;
+	public ArrayList<BigDecimal> getTempoPedidos() {
+		return tempoPedidos;
 	}
 
-	public void setTempo_pedidos(ArrayList<BigDecimal> tempo_pedidos) {
-		this.tempo_pedidos = tempo_pedidos;
+	public void setTempoPedidos(ArrayList<BigDecimal> tempoPedidos) {
+		this.tempoPedidos = tempoPedidos;
 	}
 
 }

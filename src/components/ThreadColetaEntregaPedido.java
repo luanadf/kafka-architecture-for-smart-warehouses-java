@@ -27,10 +27,14 @@ public class ThreadColetaEntregaPedido extends Thread {
 		BigDecimal tempo = getTempoPedido();
 
 		try {
-			// Thread sleep pelo tempo que o pedido leva para ser finalizado
+			// Thread faz o sleep pelo tempo que o pedido leva para ser finalizado
 			long tempoPedidoEmMilisegundos = FuncoesUteis.bigDecimalSegundosToLongMilisegundos(tempo);
+
+			// Execução no tempo normal
 			// Thread.sleep(tempoPedidoEmMilisegundos);
-			Thread.sleep(tempoPedidoEmMilisegundos / 10); // execução mais rapida para testes
+
+			// Execução 10x mais rapida para testes
+			Thread.sleep(tempoPedidoEmMilisegundos / 10);
 
 			// Cria a e envia a mensagem de finalização do pedido para o transmissor
 			MensagemFinalizacao mensagem = new MensagemFinalizacao(pedido.getIdPedido(), tempo);
