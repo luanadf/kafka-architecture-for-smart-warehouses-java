@@ -19,7 +19,8 @@ public class GeradorPedidos {
 
 	public static void main(String[] args) throws InterruptedException {
 		Properties properties = new Properties();
-		properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+		// properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092"); // local
+		properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "172.17.0.3:9092"); // docker container
 		properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 		properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, PedidoSerializer.class.getName());
 
@@ -30,7 +31,10 @@ public class GeradorPedidos {
 		double shape = 6.34;
 		double scale = 1.0;
 
-		Thread.sleep(20000);
+		int n_pedidos_enviados = 0;
+		boolean producerIsClosed = false;
+
+		// Thread.sleep(20000);
 
 		// Inicio envio de pedidos
 		try (KafkaProducer<String, Pedido> producer = new KafkaProducer<String, Pedido>(properties)) {
@@ -47,16 +51,35 @@ public class GeradorPedidos {
 					// Pega o proximo pedido do arquivo
 					Pedido pedido = leitorPedidos.getProximoPedido();
 
-					ProducerRecord<String, Pedido> record = new ProducerRecord<String, Pedido>("topico-pedidos", pedido);
-					producer.send(record);
-					System.out.println(record.value());
+					// Confere se existe um próximo pedido
+					if (pedido == null) {
+						System.out.println("\nEnvio de pedidos finaliado");
+						System.out.println(" - Foram enviados " + n_pedidos_enviados + " pedidos.");
+						producer.close();
+						producerIsClosed = true;
+						break;
+					} else {
+						ProducerRecord<String, Pedido> record = new ProducerRecord<String, Pedido>("topico-pedidos", pedido);
+						producer.send(record);
+						n_pedidos_enviados++;
+						System.out.println(record.value());
 
-					// Execução normal: 6 pedidos por minuto = 1 peido a cada 10 segundos
-					// Thread.sleep(tempo_sleep * 1000);
+						// Execução normal: 6 pedidos por minuto = 1 peido a cada 10 segundos
+						// Thread.sleep(tempo_sleep * 1000);
 
-					// Execução 10x mais rápida para testes: 6 peidos a cada 6 segundos = 1 pedido por segundo
-					Thread.sleep(tempo_sleep * 100);
+						// Execução 10x mais rápida para testes: 6 peidos a cada 6 segundos = 1 pedido por segundo
+						// Thread.sleep(tempo_sleep * 100);
+
+						// Execução 100x mais rápida para testes: 6 peidos a cada 0,6 segundos = 1 pedido por 0,1 segundo
+						Thread.sleep(tempo_sleep * 10);
+					}
 				}
+
+				// Confere se o producer foi fechado
+				if (producerIsClosed) {
+					break;
+				}
+
 			}
 		}
 	}

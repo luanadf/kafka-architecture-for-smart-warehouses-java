@@ -93,16 +93,16 @@ public class LeitorPedidosJson {
 		int id = getIdPedidoAtual();
 
 		ArrayList<Pedido> pedidos = getPedidos();
-		Pedido pedido = pedidos.get(id);
 
-		if (id + 1 == pedidos.size()) {
-			setIdPedidoAtual(0);
+		if (id == pedidos.size()) {
+			return null;
 		} else {
+			Pedido pedido = pedidos.get(id);
 			id++;
 			setIdPedidoAtual(id);
-		}
 
-		return pedido;
+			return pedido;
+		}
 	}
 
 	public ArrayList<BigDecimal> lerTempoPedidos() {

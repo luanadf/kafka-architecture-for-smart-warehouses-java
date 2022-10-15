@@ -1,14 +1,13 @@
 package utils;
 
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
+import java.util.Properties;
 
-import org.json.JSONArray;
-import org.json.JSONTokener;
-
-import components.LeitorPedidosJson;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.serialization.StringSerializer;
 
 public class Testes {
 
@@ -37,32 +36,56 @@ public class Testes {
 
 		// Teste Leitor tempo e conversao para millisegundos
 
-		String static_filepath = "../resources/time_of_orders_of_SIMU-i180-o6-r250-dHT03-d52-1.1.json";
+		/*
+		 * String static_filepath = "../resources/time_of_orders_of_SIMU-i180-o6-r250-dHT03-d52-1.1.json";
+		 * 
+		 * InputStream is = LeitorPedidosJson.class.getResourceAsStream(static_filepath); if (is == null) { throw new
+		 * NullPointerException("Cannot find resource file " + static_filepath); }
+		 * 
+		 * JSONTokener tokener = new JSONTokener(is);
+		 * 
+		 * JSONArray array_tempos_pedidos_json = new JSONArray(tokener);
+		 * 
+		 * ArrayList<BigDecimal> lista_tempos = new ArrayList<BigDecimal>();
+		 * 
+		 * for (Object tempo : array_tempos_pedidos_json) { System.out.println("\nTempo do pedido:");
+		 * 
+		 * BigDecimal tempo_pedido_segundos = (BigDecimal) tempo; System.out.println(" - Segundos: " + tempo_pedido_segundos);
+		 * 
+		 * long tempo_pedido_millisegundos = bigDecimalSegundosToLongMillisegundos(tempo_pedido_segundos);
+		 * System.out.println(" - Millisegundos: " + tempo_pedido_millisegundos);
+		 * 
+		 * System.out.println(" - Millisegundos 10x mai rapido: " + tempo_pedido_millisegundos / 10);
+		 * 
+		 * lista_tempos.add(tempo_pedido_segundos); }
+		 */
 
-		InputStream is = LeitorPedidosJson.class.getResourceAsStream(static_filepath);
-		if (is == null) {
-			throw new NullPointerException("Cannot find resource file " + static_filepath);
+		// Teste script de monitoramento
+
+		Properties properties = new Properties();
+		properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "172.17.0.3:9092");
+		properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+		properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+
+		properties.put(ProducerConfig.ACKS_CONFIG, "0");
+		properties.put(ProducerConfig.RETRIES_CONFIG, "0");
+
+		int count = 0;
+		int mensagens_enviadas = 0;
+
+		try (KafkaProducer<String, String> producer = new KafkaProducer<String, String>(properties)) {
+			while (count < 2000) {
+				ProducerRecord<String, String> record = new ProducerRecord<String, String>("topico-pedidos", "mensagem-teste");
+				producer.send(record);
+				// System.out.println(record.value());
+				mensagens_enviadas++;
+				Thread.sleep(10);
+				count++;
+			}
 		}
 
-		JSONTokener tokener = new JSONTokener(is);
+		System.out.println(mensagens_enviadas + " mensagens enviadas.");
 
-		JSONArray array_tempos_pedidos_json = new JSONArray(tokener);
-
-		ArrayList<BigDecimal> lista_tempos = new ArrayList<BigDecimal>();
-
-		for (Object tempo : array_tempos_pedidos_json) {
-			System.out.println("\nTempo do pedido:");
-
-			BigDecimal tempo_pedido_segundos = (BigDecimal) tempo;
-			System.out.println(" - Segundos: " + tempo_pedido_segundos);
-
-			long tempo_pedido_millisegundos = bigDecimalSegundosToLongMillisegundos(tempo_pedido_segundos);
-			System.out.println(" - Millisegundos: " + tempo_pedido_millisegundos);
-
-			System.out.println(" - Millisegundos 10x mai rapido: " + tempo_pedido_millisegundos / 10);
-
-			lista_tempos.add(tempo_pedido_segundos);
-		}
 	}
 
 	public static double round(double value, int places) {
