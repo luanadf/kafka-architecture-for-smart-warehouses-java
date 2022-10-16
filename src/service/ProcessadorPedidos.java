@@ -37,6 +37,7 @@ public class ProcessadorPedidos {
 			consumer.seek(partitionToReadFrom, 0);
 
 			while (true) {
+				// TODO mudar aqui conforme mudar as velocidades
 				// Faz o pool das mensagens a cada 1 segundo: Duration.ofMillis(1000)
 				ConsumerRecords<String, Pedido> pedidos = consumer.poll(Duration.ofMillis(1000));
 

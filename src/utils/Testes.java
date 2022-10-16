@@ -2,6 +2,7 @@ package utils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Arrays;
 import java.util.Properties;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -63,7 +64,7 @@ public class Testes {
 		// Teste script de monitoramento
 
 		Properties properties = new Properties();
-		properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "172.17.0.3:9092");
+		properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, Arrays.asList("172.17.0.3:9092", "172.17.0.4:9093", "172.17.0.5:9094"));
 		properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 		properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 
@@ -74,8 +75,8 @@ public class Testes {
 		int mensagens_enviadas = 0;
 
 		try (KafkaProducer<String, String> producer = new KafkaProducer<String, String>(properties)) {
-			while (count < 2000) {
-				ProducerRecord<String, String> record = new ProducerRecord<String, String>("topico-pedidos", "mensagem-teste");
+			while (count < 5000) {
+				ProducerRecord<String, String> record = new ProducerRecord<String, String>("topico-teste", "mensagem-teste");
 				producer.send(record);
 				// System.out.println(record.value());
 				mensagens_enviadas++;
