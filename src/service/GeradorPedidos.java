@@ -34,7 +34,7 @@ public class GeradorPedidos {
 		int n_pedidos_enviados = 0;
 		boolean producerIsClosed = false;
 
-		// Thread.sleep(20000);
+		Thread.sleep(5000);
 
 		// Inicio envio de pedidos
 		try (KafkaProducer<String, Pedido> producer = new KafkaProducer<String, Pedido>(properties)) {
@@ -64,14 +64,17 @@ public class GeradorPedidos {
 						n_pedidos_enviados++;
 						System.out.println(record.value());
 
-						// Execução normal: 6 pedidos por minuto = 1 peido a cada 10 segundos
+						// Execução normal: 6 pedidos por minuto = 1 pedido a cada 10 segundos
 						// Thread.sleep(tempo_sleep * 1000);
 
-						// Execução 10x mais rápida para testes: 6 peidos a cada 6 segundos = 1 pedido por segundo
+						// Execução 10x mais rápida para testes: 6 pedidos a cada 6 segundos = 1 pedido por segundo
 						// Thread.sleep(tempo_sleep * 100);
 
-						// Execução 100x mais rápida para testes: 6 peidos a cada 0,6 segundos = 1 pedido por 0,1 segundo
-						Thread.sleep(tempo_sleep * 10);
+						// Execução 100x mais rápida para testes: 6 pedidos a cada 0,6 segundos = 1 pedido por 0,1 segundo
+						// Thread.sleep(tempo_sleep * 10);
+
+						// Execução 1000x mais rápida para testes: 6 pedidos a cada 0,06 segundos = 1 pedido por 0,01 segundo
+						Thread.sleep(tempo_sleep);
 					}
 				}
 

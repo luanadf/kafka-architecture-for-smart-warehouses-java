@@ -40,7 +40,8 @@ public class TransmissorMensagens {
 	private static Properties criarPropriedades() {
 		Properties properties = new Properties();
 
-		properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+		// properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092"); // local
+		properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "172.17.0.3:9092"); // docker container
 		properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 		properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, MensagemFinalizacaoSerializer.class.getName());
 

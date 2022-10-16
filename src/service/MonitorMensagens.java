@@ -8,6 +8,7 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
 import deserializer.MensagemFinalizacaoDeserializer;
@@ -19,8 +20,13 @@ public class MonitorMensagens {
 
 		Properties propriedadesConsumidorMensagens = getPropriedadesConsumidorMensagens();
 
+		int n_mensagens_recebidas = 0;
+
 		try (KafkaConsumer<String, MensagemFinalizacao> consumer = new KafkaConsumer<String, MensagemFinalizacao>(propriedadesConsumidorMensagens)) {
-			consumer.subscribe(Arrays.asList("topico-monitoramento"));
+
+			TopicPartition partitionToReadFrom = new TopicPartition("topico-monitoramento", 0);
+			consumer.assign(Arrays.asList(partitionToReadFrom));
+			consumer.seek(partitionToReadFrom, 0);
 
 			while (true) {
 				// Faz o pool das mensagens a cada 0,1 segundo: Duration.ofMillis(100)
@@ -29,8 +35,10 @@ public class MonitorMensagens {
 				// Para cada mensagem que ele recebeu durante o pool
 				for (ConsumerRecord<String, MensagemFinalizacao> record : mensagens) {
 					MensagemFinalizacao mensagemFinalizacao = record.value();
+					n_mensagens_recebidas++;
 
-					System.out.println("Pedido " + mensagemFinalizacao.getIdPedido() + " finalizado: " + mensagemFinalizacao);
+					System.out.println("\n Pedido " + mensagemFinalizacao.getIdPedido() + " finalizado: " + mensagemFinalizacao);
+					System.out.println(" - " + n_mensagens_recebidas + " mensagens de finalização recebidas.");
 				}
 			}
 		}
@@ -40,11 +48,12 @@ public class MonitorMensagens {
 	public static Properties getPropriedadesConsumidorMensagens() {
 		Properties properties = new Properties();
 
-		properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+		// properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092"); // local
+		properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "172.17.0.3:9092"); // docker container
 		properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, MensagemFinalizacaoDeserializer.class.getName());
 		properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-		properties.put(ConsumerConfig.GROUP_ID_CONFIG, "grupo-consumidor-2");
-		properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
+		properties.put(ConsumerConfig.GROUP_ID_CONFIG, "grupo-consumidor-mensagens");
+		properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
 		return properties;
 	}
