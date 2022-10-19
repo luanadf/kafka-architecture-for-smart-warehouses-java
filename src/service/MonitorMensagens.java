@@ -49,8 +49,17 @@ public class MonitorMensagens {
 	public static Properties getPropriedadesConsumidorMensagens() {
 		Properties properties = new Properties();
 
-		// properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092"); // local
-		properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "172.17.0.3:9092"); // docker container
+		// Executando com cluster local
+		// - 1 broker
+		// properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+
+		// Executando com cluster em um container do docker
+		// - 1 broker
+		// properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "172.17.0.3:9092");
+
+		// - 3 brokers
+		properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, Arrays.asList("172.17.0.3:9092", "172.17.0.4:9093", "172.17.0.5:9094"));
+
 		properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, MensagemFinalizacaoDeserializer.class.getName());
 		properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
 		properties.put(ConsumerConfig.GROUP_ID_CONFIG, "grupo-consumidor-mensagens");

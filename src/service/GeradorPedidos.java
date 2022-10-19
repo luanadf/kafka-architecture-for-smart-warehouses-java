@@ -1,5 +1,6 @@
 package service;
 
+import java.util.Arrays;
 import java.util.Properties;
 
 import org.apache.commons.math3.distribution.GammaDistribution;
@@ -15,14 +16,27 @@ import utils.FuncoesUteis;
 
 public class GeradorPedidos {
 
-	static LeitorPedidosJson leitorPedidos = new LeitorPedidosJson("SIMU-i180-o6-r250-dHT03-d52-1.1.json");
+	static LeitorPedidosJson leitorPedidos = new LeitorPedidosJson("SIMU-i180-o6-r250-dHT03-d52-2.1.json");
 
 	public static void main(String[] args) throws InterruptedException {
 		Properties properties = new Properties();
-		// properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092"); // local
-		properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "172.17.0.3:9092"); // docker container
+
+		// Executando com cluster local
+		// - 1 broker
+		// properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+
+		// Executando com cluster em um container do docker
+		// - 1 broker
+		// properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "172.17.0.3:9092");
+
+		// - 3 brokers
+		properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, Arrays.asList("172.17.0.3:9092", "172.17.0.4:9093", "172.17.0.5:9094"));
+
 		properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 		properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, PedidoSerializer.class.getName());
+
+		// ACKS
+		properties.put(ProducerConfig.ACKS_CONFIG, "0");
 
 		/*
 		 * Orders were generated each 1 minute, and the number of orders followed a gamma distribution with parameters α = 6.34
@@ -71,10 +85,10 @@ public class GeradorPedidos {
 						// Thread.sleep(tempo_sleep * 100);
 
 						// Execução 100x mais rápida para testes: 6 pedidos a cada 0,6 segundos = 1 pedido por 0,1 segundo
-						// Thread.sleep(tempo_sleep * 10);
+						Thread.sleep(tempo_sleep * 10);
 
 						// Execução 1000x mais rápida para testes: 6 pedidos a cada 0,06 segundos = 1 pedido por 0,01 segundo
-						Thread.sleep(tempo_sleep);
+						// Thread.sleep(tempo_sleep);
 					}
 				}
 

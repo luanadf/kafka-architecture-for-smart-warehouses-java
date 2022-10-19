@@ -1,5 +1,6 @@
 package service;
 
+import java.util.Arrays;
 import java.util.Properties;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -40,10 +41,22 @@ public class TransmissorMensagens {
 	private static Properties criarPropriedades() {
 		Properties properties = new Properties();
 
-		// properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092"); // local
-		properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "172.17.0.3:9092"); // docker container
+		// Executando com cluster local
+		// - 1 broker
+		// properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+
+		// Executando com cluster em um container do docker
+		// - 1 broker
+		// properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "172.17.0.3:9092");
+
+		// - 3 brokers
+		properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, Arrays.asList("172.17.0.3:9092", "172.17.0.4:9093", "172.17.0.5:9094"));
+
 		properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 		properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, MensagemFinalizacaoSerializer.class.getName());
+
+		// ACKS
+		properties.put(ProducerConfig.ACKS_CONFIG, "0");
 
 		return properties;
 	}

@@ -19,7 +19,7 @@ import model.Pedido;
 
 public class ProcessadorPedidos {
 
-	static LeitorPedidosJson leitorPedidos = new LeitorPedidosJson("SIMU-i180-o6-r250-dHT03-d52-1.1.json");
+	static LeitorPedidosJson leitorPedidos = new LeitorPedidosJson("SIMU-i180-o6-r250-dHT03-d52-2.1.json");
 
 	public static void main(String[] args) throws InterruptedException {
 
@@ -64,8 +64,16 @@ public class ProcessadorPedidos {
 	public static Properties getPropriedadesConsumidorPedidos() {
 		Properties properties = new Properties();
 
-		// properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092"); // local
-		properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "172.17.0.3:9092"); // docker container
+		// Executando com cluster local
+		// - 1 broker
+		// properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+
+		// Executando com cluster em um container do docker
+		// - 1 broker
+		// properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "172.17.0.3:9092");
+
+		// - 3 brokers
+		properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, Arrays.asList("172.17.0.3:9092", "172.17.0.4:9093", "172.17.0.5:9094"));
 
 		properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, PedidoDeserializer.class.getName());
 		properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());

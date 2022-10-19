@@ -21,7 +21,7 @@ public class TesteConsumer {
 
 		try (KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(propriedadesConsumidorMensagens)) {
 
-			TopicPartition partitionToReadFrom = new TopicPartition("topico-teste", 0);
+			TopicPartition partitionToReadFrom = new TopicPartition("teste", 0);
 			consumer.assign(Arrays.asList(partitionToReadFrom));
 			consumer.seek(partitionToReadFrom, 0);
 

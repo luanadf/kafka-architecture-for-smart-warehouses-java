@@ -37,10 +37,10 @@ public class ThreadColetaEntregaPedido extends Thread {
 			// Thread.sleep(tempoPedidoEmMilisegundos / 10);
 
 			// Execução 100x mais rapida para testes
-			// Thread.sleep(tempoPedidoEmMilisegundos / 100);
+			Thread.sleep(tempoPedidoEmMilisegundos / 100);
 
 			// Execução 1000x mais rapida para testes
-			Thread.sleep(tempoPedidoEmMilisegundos / 1000);
+			// Thread.sleep(tempoPedidoEmMilisegundos / 1000);
 
 			// Cria a e envia a mensagem de finalização do pedido para o transmissor
 			MensagemFinalizacao mensagem = new MensagemFinalizacao(pedido.getIdPedido(), tempo);

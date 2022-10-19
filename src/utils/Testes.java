@@ -76,7 +76,7 @@ public class Testes {
 
 		try (KafkaProducer<String, String> producer = new KafkaProducer<String, String>(properties)) {
 			while (count < 5000) {
-				ProducerRecord<String, String> record = new ProducerRecord<String, String>("topico-teste", "mensagem-teste");
+				ProducerRecord<String, String> record = new ProducerRecord<String, String>("teste", "mensagem-teste");
 				producer.send(record);
 				// System.out.println(record.value());
 				mensagens_enviadas++;
