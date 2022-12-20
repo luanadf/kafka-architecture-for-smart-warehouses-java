@@ -1,6 +1,5 @@
 package service;
 
-import java.util.Arrays;
 import java.util.Properties;
 
 import org.apache.commons.math3.distribution.GammaDistribution;
@@ -27,10 +26,11 @@ public class GeradorPedidos {
 
 		// Executando com cluster em um container do docker
 		// - 1 broker
-		// properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "172.17.0.3:9092");
+		properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
 
 		// - 3 brokers
-		properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, Arrays.asList("172.17.0.3:9092", "172.17.0.4:9093", "172.17.0.5:9094"));
+		// properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, Arrays.asList("172.17.0.3:9092", "172.17.0.4:9093",
+		// "172.17.0.5:9094"));
 
 		properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 		properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, PedidoSerializer.class.getName());
@@ -82,10 +82,10 @@ public class GeradorPedidos {
 						// Thread.sleep(tempo_sleep * 1000);
 
 						// Execução 10x mais rápida para testes: 6 pedidos a cada 6 segundos = 1 pedido por segundo
-						// Thread.sleep(tempo_sleep * 100);
+						Thread.sleep(tempo_sleep * 100);
 
 						// Execução 100x mais rápida para testes: 6 pedidos a cada 0,6 segundos = 1 pedido por 0,1 segundo
-						Thread.sleep(tempo_sleep * 10);
+						// Thread.sleep(tempo_sleep * 10);
 
 						// Execução 1000x mais rápida para testes: 6 pedidos a cada 0,06 segundos = 1 pedido por 0,01 segundo
 						// Thread.sleep(tempo_sleep);

@@ -37,8 +37,6 @@ public class ProcessadorPedidos {
 			consumer.seek(partitionToReadFrom, 0);
 
 			while (true) {
-				// TODO mudar aqui conforme mudar as velocidades
-				// Faz o pool das mensagens a cada 1 segundo: Duration.ofMillis(1000)
 				ConsumerRecords<String, Pedido> pedidos = consumer.poll(Duration.ofMillis(1000));
 
 				// Para cada mensagem que ele recebeu durante o pool
@@ -70,10 +68,11 @@ public class ProcessadorPedidos {
 
 		// Executando com cluster em um container do docker
 		// - 1 broker
-		// properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "172.17.0.3:9092");
+		properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
 
 		// - 3 brokers
-		properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, Arrays.asList("172.17.0.3:9092", "172.17.0.4:9093", "172.17.0.5:9094"));
+		// properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, Arrays.asList("172.17.0.3:9092", "172.17.0.4:9093",
+		// "172.17.0.5:9094"));
 
 		properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, PedidoDeserializer.class.getName());
 		properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());

@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 
 public class MensagemFinalizacao {
 
-	// TODO Adaptar para modelo de mensagem de retorno do George
 	private Integer idPedido;
 	private BigDecimal tempoTotalEntrega;
 

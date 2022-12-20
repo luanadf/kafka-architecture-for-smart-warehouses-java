@@ -29,8 +29,6 @@ public class MonitorMensagens {
 			consumer.seek(partitionToReadFrom, 0);
 
 			while (true) {
-				// TODO mudar aqui conforme mudar as velocidades
-				// Faz o pool das mensagens a cada 0,1 segundo: Duration.ofMillis(100)
 				ConsumerRecords<String, MensagemFinalizacao> mensagens = consumer.poll(Duration.ofMillis(100));
 
 				// Para cada mensagem que ele recebeu durante o pool
@@ -55,10 +53,11 @@ public class MonitorMensagens {
 
 		// Executando com cluster em um container do docker
 		// - 1 broker
-		// properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "172.17.0.3:9092");
+		properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
 
 		// - 3 brokers
-		properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, Arrays.asList("172.17.0.3:9092", "172.17.0.4:9093", "172.17.0.5:9094"));
+		// properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, Arrays.asList("172.17.0.3:9092", "172.17.0.4:9093",
+		// "172.17.0.5:9094"));
 
 		properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, MensagemFinalizacaoDeserializer.class.getName());
 		properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
